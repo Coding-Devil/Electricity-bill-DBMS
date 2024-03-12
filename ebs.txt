@@ -1,0 +1,51 @@
+CREATE DATABASE EBS;
+USE EBS;
+
+CREATE TABLE login(
+    meter_no VARCHAR(20) PRIMARY KEY,
+    username VARCHAR(30) UNIQUE,
+    name VARCHAR(30),
+    password VARCHAR(20),  -- Consider storing hashed passwords instead
+    user_type VARCHAR(20)
+);
+
+CREATE TABLE customer(
+    name VARCHAR(20),
+    meter_no VARCHAR(20) PRIMARY KEY,
+    address VARCHAR(50),
+    city VARCHAR(30),
+    state VARCHAR(30),
+    email VARCHAR(40),
+    phone VARCHAR(20),
+    FOREIGN KEY (meter_no) REFERENCES login(meter_no)
+);
+
+CREATE TABLE meter_info(
+    meter_no VARCHAR(20) PRIMARY KEY,
+    meter_location VARCHAR(20),
+    meter_type VARCHAR(20),
+    phase_code VARCHAR(20),
+    bill_type VARCHAR(20),
+    days VARCHAR(20),
+    FOREIGN KEY (meter_no) REFERENCES customer(meter_no)
+);
+
+CREATE TABLE tax(
+    tax_id INT PRIMARY KEY,
+    cost_per_unit VARCHAR(20),
+    meter_rent VARCHAR(20),
+    service_charge VARCHAR(20),
+    service_tax VARCHAR(20),
+    fixed_tax VARCHAR(20)
+);
+INSERT INTO tax VALUES(1, '9', '47', '22', '57', '18');
+
+CREATE TABLE bill(
+    bill_id INT AUTO_INCREMENT PRIMARY KEY,
+    meter_no VARCHAR(20),
+    month VARCHAR(30),
+    units VARCHAR(20),
+    totalbill VARCHAR(20),
+    status VARCHAR(20),
+    FOREIGN KEY (meter_no) REFERENCES customer(meter_no)
+);
