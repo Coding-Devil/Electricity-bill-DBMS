@@ -118,8 +118,39 @@ public class CustomerDetails extends JFrame implements ActionListener {
     }
 
     private void updateRow(int row) {
-        // Update logic (Unchanged)
+        String name = model.getValueAt(row, 0).toString();
+        String meterNo = model.getValueAt(row, 1).toString(); // Primary key
+        String address = model.getValueAt(row, 2).toString();
+        String city = model.getValueAt(row, 3).toString();
+        String state = model.getValueAt(row, 4).toString();
+        String email = model.getValueAt(row, 5).toString();
+        String phone = model.getValueAt(row, 6).toString();
+
+        try {
+            Conn c = new Conn();
+            String query = "UPDATE customer SET name = ?, address = ?, city = ?, state = ?, email = ?, phone = ? WHERE meter_no = ?";
+            PreparedStatement pst = c.s.getConnection().prepareStatement(query);
+
+            pst.setString(1, name);
+            pst.setString(2, address);
+            pst.setString(3, city);
+            pst.setString(4, state);
+            pst.setString(5, email);
+            pst.setString(6, phone);
+            pst.setString(7, meterNo);
+
+            int updated = pst.executeUpdate();
+            if (updated > 0) {
+                JOptionPane.showMessageDialog(null, "Update Successful");
+            } else {
+                JOptionPane.showMessageDialog(null, "Update Failed: No rows affected.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Update Failed");
+            e.printStackTrace();
+        }
     }
+
 
     private void deleteRow(int row) {
     String meterNo = model.getValueAt(row, 1).toString(); // Use Meter No as identifier
