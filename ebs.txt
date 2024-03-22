@@ -49,3 +49,30 @@ CREATE TABLE bill(
     status VARCHAR(20),
     FOREIGN KEY (meter_no) REFERENCES customer(meter_no)
 );
+
+--triggers
+
+CREATE TRIGGER insert_customer_trigger
+AFTER INSERT ON customer
+FOR EACH ROW
+BEGIN
+    -- Insert corresponding entry into login table
+    INSERT INTO login (meter_no) VALUES (NEW.meter_no);
+END;
+
+CREATE TRIGGER update_customer_trigger
+AFTER UPDATE ON customer
+FOR EACH ROW
+BEGIN
+    -- Update corresponding entry in login table
+    UPDATE login SET meter_no = NEW.meter_no WHERE meter_no = OLD.meter_no;
+END;
+
+CREATE TRIGGER delete_customer_trigger
+AFTER DELETE ON customer
+FOR EACH ROW
+BEGIN
+    -- Delete related entry from login table
+    DELETE FROM login WHERE meter_no = OLD.meter_no;
+END;
+
